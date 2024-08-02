@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <sys/resource.h>
 #include <bpf/libbpf.h>
-#include "minimal.skel.h"
+#include "ipi.skel.h"
 
 static int libbpf_print_fn(enum libbpf_print_level level, const char *format, va_list args)
 {
@@ -13,28 +13,28 @@ static int libbpf_print_fn(enum libbpf_print_level level, const char *format, va
 
 int main(int argc, char **argv)
 {
-	struct minimal_bpf *skel;
+	struct ipi_bpf *skel;
 	int err;
 
 	/* Set up libbpf errors and debug info callback */
 	libbpf_set_print(libbpf_print_fn);
 
 	/* Open BPF application */
-	skel = minimal_bpf__open();
+	skel = ipi_bpf__open();
 	if (!skel) {
 		fprintf(stderr, "Failed to open BPF skeleton\n");
 		return 1;
 	}
 
 	/* Load & verify BPF programs */
-	err = minimal_bpf__load(skel);
+	err = ipi_bpf__load(skel);
 	if (err) {
 		fprintf(stderr, "Failed to load and verify BPF skeleton\n");
 		goto cleanup;
 	}
 
 	/* Attach tracepoint handler */
-	err = minimal_bpf__attach(skel);
+	err = ipi_bpf__attach(skel);
 	if (err) {
 		fprintf(stderr, "Failed to attach BPF skeleton\n");
 		goto cleanup;
@@ -50,6 +50,6 @@ int main(int argc, char **argv)
 	}
 
 cleanup:
-	minimal_bpf__destroy(skel);
+	ipi_bpf__destroy(skel);
 	return -err;
 }
