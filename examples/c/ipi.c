@@ -40,9 +40,6 @@ int main(int argc, char **argv)
 		goto cleanup;
 	}
 
-	printf("Successfully started! Please run `sudo cat /sys/kernel/debug/tracing/trace_pipe` "
-	       "to see output of the BPF programs.\n");
-
 	for (;;) {
 		/* trigger our BPF program */
 		fprintf(stderr, ".");
